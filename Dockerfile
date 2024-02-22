@@ -11,14 +11,14 @@ USER appuser
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /src
-COPY ["infra-web/infra-web.csproj", "infra-web/"]
-RUN dotnet restore "infra-web/infra-web.csproj"
-COPY . .
+COPY ["infra-web.csproj", "infra-web/"]
+RUN dotnet restore "/src/infra-web/infra-web.csproj"
+COPY . ./infra-web
 WORKDIR "/src/infra-web"
-RUN dotnet build "infra-web.csproj" -c Release -o /app/build
+RUN dotnet build "/src/infra-web/infra-web.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "infra-web.csproj" -c Release -o /app/publish
+RUN dotnet publish "/src/infra-web/infra-web.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
